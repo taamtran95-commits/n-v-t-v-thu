@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
-import { getItemById } from '@/data/menu';
+import { useMenu } from '@/context/MenuContext';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/format';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ const FoodDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { getItemById } = useMenu();
   const [quantity, setQuantity] = useState(1);
 
   const item = id ? getItemById(id) : undefined;
