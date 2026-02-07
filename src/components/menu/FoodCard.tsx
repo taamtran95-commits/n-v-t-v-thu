@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { MenuItem } from '@/data/menu';
 import { useCart } from '@/context/CartContext';
+import { useMenu } from '@/context/MenuContext';
 import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/format';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 interface FoodCardProps {
   item: MenuItem;
@@ -18,6 +20,14 @@ const categoryLabels: Record<string, string> = {
 
 const FoodCard = ({ item }: FoodCardProps) => {
   const { addItem } = useCart();
+  const { removeMenuItem } = useMenu();
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    removeMenuItem(item.id);
+    toast.success(`Đã xoá "${item.name}" khỏi thực đơn`);
+  };
 
   return (
     <div className="group bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition-all duration-300">
@@ -53,17 +63,28 @@ const FoodCard = ({ item }: FoodCardProps) => {
           <span className="text-lg font-bold text-primary">
             {formatPrice(item.price)}
           </span>
-          <Button
-            size="sm"
-            variant="default"
-            onClick={(e) => {
-              e.preventDefault();
-              addItem(item);
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            Thêm
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
+              onClick={handleDelete}
+              title="Xoá món"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+            <Button
+              size="sm"
+              variant="default"
+              onClick={(e) => {
+                e.preventDefault();
+                addItem(item);
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              Thêm
+            </Button>
+          </div>
         </div>
       </div>
     </div>

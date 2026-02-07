@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CategorySlug, getItemsByCategory } from '@/data/menu';
+import { CategorySlug } from '@/data/menu';
+import { useMenu } from '@/context/MenuContext';
 import CategoryFilter from '@/components/menu/CategoryFilter';
 import FoodCard from '@/components/menu/FoodCard';
+import AddDishDialog from '@/components/menu/AddDishDialog';
 
 const MenuPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategorySlug>('all');
+  const { getItemsByCategory } = useMenu();
   const items = getItemsByCategory(selectedCategory);
 
   return (
@@ -20,8 +23,9 @@ const MenuPage = () => {
           </p>
         </div>
 
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <CategoryFilter selected={selectedCategory} onChange={setSelectedCategory} />
+          <AddDishDialog />
         </div>
 
         <motion.div
