@@ -14,16 +14,16 @@ const CartDrawer = () => {
         <SheetHeader>
           <SheetTitle className="font-heading flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-primary" />
-            Giỏ hàng
+            Món đã chọn
           </SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
             <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mb-4" />
-            <p className="text-muted-foreground font-medium mb-2">Giỏ hàng trống</p>
+            <p className="text-muted-foreground font-medium mb-2">Chưa chọn món nào</p>
             <p className="text-sm text-muted-foreground/70 mb-6">
-              Hãy thêm món ngon vào giỏ hàng nhé!
+              Hãy chọn món ngon từ thực đơn nhé!
             </p>
             <Button variant="outline-primary" asChild onClick={() => setIsOpen(false)}>
               <Link to="/thuc-don">Xem thực đơn</Link>
@@ -74,7 +74,7 @@ const CartDrawer = () => {
                 <span className="text-xl font-bold text-primary">{formatPrice(totalPrice)}</span>
               </div>
               <Button variant="hero" size="lg" className="w-full" asChild onClick={() => setIsOpen(false)}>
-                <Link to="/dat-hang">Đặt hàng</Link>
+                <Link to="/dat-hang">Gọi món</Link>
               </Button>
             </div>
           </>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin, Phone, User, FileText } from 'lucide-react';
+import { ArrowLeft, Phone, User, FileText, Hash } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/format';
 import { Button } from '@/components/ui/button';
@@ -9,12 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface OrderData {
   id: string;
   items: { name: string; quantity: number; price: number }[];
-  customer: { name: string; phone: string; address: string; notes: string };
+  customer: { name: string; phone: string; tableNumber: string; notes: string };
   total: number;
   status: string;
   createdAt: string;
@@ -23,16 +23,15 @@ interface OrderData {
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, totalPrice, clearCart } = useCart();
-  const { toast } = useToast();
-  const [form, setForm] = useState({ name: '', phone: '', address: '', notes: '' });
+  const [form, setForm] = useState({ name: '', phone: '', tableNumber: '', notes: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="font-heading text-2xl font-bold text-foreground mb-4">Giỏ hàng trống</h1>
-          <p className="text-muted-foreground mb-6">Hãy thêm món ăn vào giỏ trước khi đặt hàng.</p>
+          <h1 className="font-heading text-2xl font-bold text-foreground mb-4">Chưa có món nào</h1>
+          <p className="text-muted-foreground mb-6">Hãy chọn món ăn trước khi gọi món.</p>
           <Button variant="outline-primary" asChild>
             <Link to="/thuc-don">Xem thực đơn</Link>
           </Button>
@@ -44,18 +43,14 @@ const CheckoutPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.name || !form.phone || !form.address) {
-      toast({
-        title: "Thiếu thông tin",
-        description: "Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ.",
-        variant: "destructive",
-      });
+    if (!form.name || !form.phone) {
+      toast.error('Vui lòng điền đầy đủ họ tên và số điện thoại.');
       return;
     }
 
     setIsSubmitting(true);
 
-    const orderId = 'QN' + Date.now().toString(36).toUpperCase();
+    const orderId = 'AV' + Date.now().toString(36).toUpperCase();
 
     const order: OrderData = {
       id: orderId,
@@ -76,10 +71,7 @@ const CheckoutPage = () => {
 
     clearCart();
 
-    toast({
-      title: "Đặt hàng thành công! 🎉",
-      description: `Mã đơn hàng: ${orderId}`,
-    });
+    toast.success(`Gọi món thành công! 🎉 Mã đơn: ${orderId}`);
 
     navigate(`/theo-doi?order=${orderId}`);
   };
@@ -97,11 +89,11 @@ const CheckoutPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-8">Đặt Hàng</h1>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-8">Gọi Món</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             <form onSubmit={handleSubmit} className="md:col-span-3 space-y-5">
-              <h2 className="font-heading text-xl font-semibold text-foreground">Thông tin giao hàng</h2>
+              <h2 className="font-heading text-xl font-semibold text-foreground">Thông tin khách hàng</h2>
 
               <div className="space-y-2">
                 <Label htmlFor="name" className="flex items-center gap-2">
@@ -133,16 +125,15 @@ const CheckoutPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address" className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  Địa chỉ giao hàng
+                <Label htmlFor="tableNumber" className="flex items-center gap-2">
+                  <Hash className="h-4 w-4 text-muted-foreground" />
+                  Số bàn (tuỳ chọn)
                 </Label>
                 <Input
-                  id="address"
-                  placeholder="123 Đường ABC, Quận X, TP.HCM"
-                  value={form.address}
-                  onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
-                  required
+                  id="tableNumber"
+                  placeholder="VD: Bàn 3"
+                  value={form.tableNumber}
+                  onChange={e => setForm(f => ({ ...f, tableNumber: e.target.value }))}
                 />
               </div>
 
@@ -153,7 +144,7 @@ const CheckoutPage = () => {
                 </Label>
                 <Textarea
                   id="notes"
-                  placeholder="Ghi chú thêm cho đơn hàng..."
+                  placeholder="Ít cay, thêm rau, không hành..."
                   value={form.notes}
                   onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                   rows={3}
@@ -163,8 +154,8 @@ const CheckoutPage = () => {
               <Separator />
 
               <div className="bg-secondary/50 rounded-lg p-4">
-                <p className="text-sm font-medium text-foreground mb-1">💰 Thanh toán khi nhận hàng (COD)</p>
-                <p className="text-sm text-muted-foreground">Bạn sẽ thanh toán cho shipper khi nhận đồ ăn.</p>
+                <p className="text-sm font-medium text-foreground mb-1">💰 Thanh toán tại quán</p>
+                <p className="text-sm text-muted-foreground">Bạn sẽ thanh toán trực tiếp khi nhận món.</p>
               </div>
 
               <Button
@@ -174,13 +165,13 @@ const CheckoutPage = () => {
                 className="w-full"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Đang xử lý...' : `Xác nhận đặt hàng — ${formatPrice(totalPrice)}`}
+                {isSubmitting ? 'Đang xử lý...' : `Xác nhận gọi món — ${formatPrice(totalPrice)}`}
               </Button>
             </form>
 
             <div className="md:col-span-2">
               <div className="bg-card border border-border rounded-xl p-5 sticky top-24">
-                <h2 className="font-heading text-lg font-semibold text-card-foreground mb-4">Đơn hàng của bạn</h2>
+                <h2 className="font-heading text-lg font-semibold text-card-foreground mb-4">Món đã chọn</h2>
 
                 <div className="space-y-3">
                   {items.map(({ item, quantity }) => (

@@ -79,10 +79,11 @@ const FoodCard = ({ item }: FoodCardProps) => {
               onClick={(e) => {
                 e.preventDefault();
                 addItem(item);
+                toast.success(`Đã thêm "${item.name}" vào danh sách gọi món`);
               }}
             >
               <Plus className="h-4 w-4" />
-              Thêm
+              Chọn
             </Button>
           </div>
         </div>

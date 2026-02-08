@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Package, ChefHat, Truck, CheckCircle2, Clock } from 'lucide-react';
+import { Search, Package, ChefHat, CheckCircle2, Clock, UtensilsCrossed } from 'lucide-react';
 import { formatPrice } from '@/lib/format';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,17 +9,17 @@ import { Input } from '@/components/ui/input';
 interface OrderData {
   id: string;
   items: { name: string; quantity: number; price: number }[];
-  customer: { name: string; phone: string; address: string; notes: string };
+  customer: { name: string; phone: string; tableNumber: string; notes: string };
   total: number;
   status: string;
   createdAt: string;
 }
 
 const statuses = [
-  { key: 'received', label: 'Đã tiếp nhận', icon: Package, description: 'Đơn hàng đã được tiếp nhận' },
-  { key: 'preparing', label: 'Đang chuẩn bị', icon: ChefHat, description: 'Bếp đang chuẩn bị món ăn' },
-  { key: 'delivering', label: 'Đang giao hàng', icon: Truck, description: 'Shipper đang giao đến bạn' },
-  { key: 'delivered', label: 'Đã giao', icon: CheckCircle2, description: 'Đơn hàng đã hoàn thành' },
+  { key: 'received', label: 'Đã tiếp nhận', icon: Package, description: 'Quán đã nhận đơn gọi món' },
+  { key: 'preparing', label: 'Đang chế biến', icon: ChefHat, description: 'Bếp đang chế biến món ăn' },
+  { key: 'ready', label: 'Sẵn sàng phục vụ', icon: UtensilsCrossed, description: 'Món ăn đã sẵn sàng' },
+  { key: 'completed', label: 'Hoàn thành', icon: CheckCircle2, description: 'Đã phục vụ xong' },
 ];
 
 function getSimulatedStatus(createdAt: string): string {
@@ -27,8 +27,8 @@ function getSimulatedStatus(createdAt: string): string {
   const minutes = elapsed / (1000 * 60);
   if (minutes < 2) return 'received';
   if (minutes < 5) return 'preparing';
-  if (minutes < 10) return 'delivering';
-  return 'delivered';
+  if (minutes < 10) return 'ready';
+  return 'completed';
 }
 
 const OrderTrackingPage = () => {
@@ -76,15 +76,15 @@ const OrderTrackingPage = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="font-heading text-3xl font-bold text-foreground mb-2 text-center">
-            Theo Dõi Đơn Hàng
+            Theo Dõi Đơn Món
           </h1>
           <p className="text-muted-foreground text-center mb-8">
-            Nhập mã đơn hàng để xem trạng thái
+            Nhập mã đơn để xem trạng thái chế biến
           </p>
 
           <form onSubmit={handleSearch} className="flex gap-3 mb-8">
             <Input
-              placeholder="Nhập mã đơn hàng (VD: QNXXXXXX)"
+              placeholder="Nhập mã đơn (VD: AVXXXXXX)"
               value={searchId}
               onChange={e => setSearchId(e.target.value)}
               className="flex-1"
@@ -97,9 +97,9 @@ const OrderTrackingPage = () => {
 
           {notFound && (
             <div className="text-center py-12 bg-card border border-border rounded-xl">
-              <p className="text-muted-foreground mb-4">Không tìm thấy đơn hàng với mã "{searchId}"</p>
+              <p className="text-muted-foreground mb-4">Không tìm thấy đơn với mã "{searchId}"</p>
               <Button variant="outline-primary" asChild>
-                <Link to="/thuc-don">Đặt món ngay</Link>
+                <Link to="/thuc-don">Gọi món ngay</Link>
               </Button>
             </div>
           )}
@@ -114,11 +114,11 @@ const OrderTrackingPage = () => {
               <div className="bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <p className="text-sm text-muted-foreground">Mã đơn hàng</p>
+                    <p className="text-sm text-muted-foreground">Mã đơn</p>
                     <p className="font-bold text-foreground text-lg">{order.id}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Thời gian đặt</p>
+                    <p className="text-sm text-muted-foreground">Thời gian gọi món</p>
                     <p className="font-medium text-foreground text-sm">
                       {new Date(order.createdAt).toLocaleString('vi-VN')}
                     </p>
@@ -164,7 +164,7 @@ const OrderTrackingPage = () => {
               </div>
 
               <div className="bg-card border border-border rounded-xl p-6">
-                <h2 className="font-heading text-lg font-semibold text-card-foreground mb-4">Chi tiết đơn hàng</h2>
+                <h2 className="font-heading text-lg font-semibold text-card-foreground mb-4">Chi tiết đơn món</h2>
 
                 <div className="space-y-3 mb-4">
                   {order.items.map((item, idx) => (
@@ -180,12 +180,14 @@ const OrderTrackingPage = () => {
                   <span className="font-bold text-primary text-lg">{formatPrice(order.total)}</span>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-border space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Giao đến: {order.customer.address}</span>
+                {order.customer.tableNumber && (
+                  <div className="mt-4 pt-4 border-t border-border space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-muted-foreground">Bàn: {order.customer.tableNumber}</span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </motion.div>
           )}
