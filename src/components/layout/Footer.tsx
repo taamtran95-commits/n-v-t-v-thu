@@ -21,15 +21,15 @@ const Footer = () => {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 text-sm text-background/60">
                 <MapPin className="h-4 w-4 shrink-0" />
-                <span>123 Đường Nguyễn Huệ, Q.1, TP.HCM</span>
+                <span>63 Phạm Thận Duật, P. Ninh Sơn, TP. Ninh Bình</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-background/60">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>0123 456 789</span>
+                <span>0965 971 282</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-background/60">
                 <Clock className="h-4 w-4 shrink-0" />
-                <span>7:00 - 22:00 hàng ngày</span>
+                <span>16:30 - 22:00 hàng ngày</span>
               </div>
             </div>
           </div>
