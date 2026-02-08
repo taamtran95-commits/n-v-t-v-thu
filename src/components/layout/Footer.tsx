@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+
 import { MapPin, Phone, Clock } from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background/90">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🍡</span>
@@ -17,16 +17,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-heading text-lg font-semibold mb-4">Liên kết</h3>
-            <nav className="flex flex-col gap-2">
-              <Link to="/" className="text-sm text-background/60 hover:text-background transition-colors">Trang chủ</Link>
-              <Link to="/thuc-don" className="text-sm text-background/60 hover:text-background transition-colors">Thực đơn</Link>
-              <Link to="/theo-doi" className="text-sm text-background/60 hover:text-background transition-colors">Theo dõi đơn hàng</Link>
-            </nav>
-          </div>
-
-          <div>
-            <h3 className="font-heading text-lg font-semibold mb-4">Liên hệ</h3>
+            <h3 className="font-heading text-lg font-semibold mb-4">Thông tin</h3>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 text-sm text-background/60">
                 <MapPin className="h-4 w-4 shrink-0" />
