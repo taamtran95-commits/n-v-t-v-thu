@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useMenu } from '@/context/MenuContext';
@@ -38,6 +39,7 @@ const FoodDetailPage = () => {
 
   const handleAddToCart = () => {
     addItem(item, quantity);
+    toast.success(`Đã thêm ${quantity}x "${item.name}" vào danh sách gọi món`);
   };
 
   return (
@@ -106,7 +108,7 @@ const FoodDetailPage = () => {
 
             <Button variant="hero" size="xl" onClick={handleAddToCart} className="w-full md:w-auto">
               <ShoppingCart className="h-5 w-5" />
-              Thêm vào giỏ — {formatPrice(item.price * quantity)}
+              Chọn món — {formatPrice(item.price * quantity)}
             </Button>
           </motion.div>
         </div>
