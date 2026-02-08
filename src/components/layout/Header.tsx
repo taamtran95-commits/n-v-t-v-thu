@@ -20,8 +20,8 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl">🍜</span>
-          <span className="font-heading text-xl font-bold text-primary">Quán Ngon</span>
+          <span className="text-2xl">🍡</span>
+          <span className="font-heading text-xl font-bold text-primary">Ăn Vặt Vũ Thuý</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

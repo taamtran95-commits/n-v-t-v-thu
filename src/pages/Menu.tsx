@@ -19,7 +19,7 @@ const MenuPage = () => {
             Thực Đơn
           </h1>
           <p className="text-muted-foreground">
-            Khám phá các món ăn ngon tại Quán Ngon
+            Khám phá các món ăn ngon tại Ăn Vặt Vũ Thuý
           </p>
         </div>
 

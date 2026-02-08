@@ -8,11 +8,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">🍜</span>
-              <span className="font-heading text-xl font-bold">Quán Ngon</span>
+              <span className="text-2xl">🍡</span>
+              <span className="font-heading text-xl font-bold">Ăn Vặt Vũ Thuý</span>
             </div>
             <p className="text-background/60 text-sm leading-relaxed">
-              Mang đến những món ăn Việt Nam truyền thống, đậm đà hương vị quê hương.
+              Mang đến những món ăn vặt Việt Nam ngon miệng, đậm đà hương vị quê hương.
             </p>
           </div>
 
@@ -45,7 +45,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-background/10 mt-8 pt-6 text-center text-sm text-background/40">
-          © 2026 Quán Ngon. Tất cả quyền được bảo lưu.
+          © 2026 Ăn Vặt Vũ Thuý. Tất cả quyền được bảo lưu.
         </div>
       </div>
     </footer>
