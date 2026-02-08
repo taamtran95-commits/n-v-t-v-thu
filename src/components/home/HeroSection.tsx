@@ -13,7 +13,7 @@ const HeroSection = () => {
           alt="Món ăn Việt Nam ngon miệng"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/50 to-transparent" />
       </div>
 
       <div className="relative container mx-auto px-4 h-full flex items-center">
@@ -27,20 +27,20 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-overlay-foreground mb-4 leading-tight"
+            className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 leading-tight"
           >
-            Hương Vị
+            Ăn Vặt
             <br />
-            <span className="text-accent">Quê Hương</span>
+            <span className="text-accent">Vũ Thuý</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-overlay-foreground/80 text-lg mb-8 leading-relaxed"
+            className="text-foreground/70 text-lg mb-8 leading-relaxed"
           >
-            Thưởng thức những món ăn Việt Nam truyền thống, được chế biến từ nguyên liệu tươi ngon mỗi ngày.
+            Thưởng thức những món ăn vặt Việt Nam hấp dẫn, được chế biến từ nguyên liệu tươi ngon mỗi ngày.
           </motion.p>
 
           <motion.div

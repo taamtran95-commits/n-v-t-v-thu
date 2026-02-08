@@ -23,7 +23,7 @@ const FeaturedDishes = () => {
             Món Nổi Bật
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Những món ăn được yêu thích nhất tại Quán Ngon
+            Những món ăn được yêu thích nhất tại Ăn Vặt Vũ Thuý
           </p>
         </motion.div>
 
