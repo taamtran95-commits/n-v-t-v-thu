@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { MenuItem } from '@/data/menu';
+import { MenuItem } from '@/context/MenuContext';
 
 export interface CartItem {
   item: MenuItem;

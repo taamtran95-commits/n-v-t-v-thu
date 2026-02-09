@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CategorySlug } from '@/data/menu';
 import { useMenu } from '@/context/MenuContext';
 import CategoryFilter from '@/components/menu/CategoryFilter';
 import FoodCard from '@/components/menu/FoodCard';
-import AddDishDialog from '@/components/menu/AddDishDialog';
 
 const MenuPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<CategorySlug>('all');
-  const { getItemsByCategory } = useMenu();
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const { getItemsByCategory, loading } = useMenu();
   const items = getItemsByCategory(selectedCategory);
 
   return (
@@ -23,29 +21,34 @@ const MenuPage = () => {
           </p>
         </div>
 
-        <div className="mb-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="mb-8 flex items-center justify-center">
           <CategoryFilter selected={selectedCategory} onChange={setSelectedCategory} />
-          <AddDishDialog />
         </div>
 
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          {items.map((item, index) => (
-            <motion.div
-              key={item.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-            >
-              <FoodCard item={item} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">Đang tải thực đơn...</p>
+          </div>
+        ) : (
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            {items.map((item, index) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <FoodCard item={item} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
-        {items.length === 0 && (
+        {!loading && items.length === 0 && (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg">Không tìm thấy món ăn nào.</p>
           </div>

@@ -13,6 +13,8 @@ import MenuPage from "./pages/Menu";
 import FoodDetailPage from "./pages/FoodDetail";
 import CheckoutPage from "./pages/Checkout";
 import OrderHistoryPage from "./pages/OrderHistory";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,17 +27,25 @@ const App = () => (
       <BrowserRouter>
         <MenuProvider>
           <CartProvider>
-            <Header />
-            <CartDrawer />
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/thuc-don" element={<MenuPage />} />
-              <Route path="/mon/:id" element={<FoodDetailPage />} />
-              <Route path="/dat-hang" element={<CheckoutPage />} />
-              <Route path="/lich-su" element={<OrderHistoryPage />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="*" element={
+                <>
+                  <Header />
+                  <CartDrawer />
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/thuc-don" element={<MenuPage />} />
+                    <Route path="/mon/:id" element={<FoodDetailPage />} />
+                    <Route path="/dat-hang" element={<CheckoutPage />} />
+                    <Route path="/lich-su" element={<OrderHistoryPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  <Footer />
+                </>
+              } />
             </Routes>
-            <Footer />
           </CartProvider>
         </MenuProvider>
       </BrowserRouter>

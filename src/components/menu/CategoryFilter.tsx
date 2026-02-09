@@ -1,15 +1,22 @@
-import { CategorySlug, categories } from '@/data/menu';
+import { useMenu } from '@/context/MenuContext';
 import { cn } from '@/lib/utils';
 
 interface CategoryFilterProps {
-  selected: CategorySlug;
-  onChange: (slug: CategorySlug) => void;
+  selected: string;
+  onChange: (slug: string) => void;
 }
 
 const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
+  const { categories } = useMenu();
+
+  const allCategories = [
+    { id: 'all', name: 'Tất cả', slug: 'all' },
+    ...categories,
+  ];
+
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-      {categories.map(cat => (
+      {allCategories.map(cat => (
         <button
           key={cat.id}
           onClick={() => onChange(cat.slug)}
@@ -20,7 +27,6 @@ const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
               : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
           )}
         >
-          <span>{cat.icon}</span>
           {cat.name}
         </button>
       ))}
