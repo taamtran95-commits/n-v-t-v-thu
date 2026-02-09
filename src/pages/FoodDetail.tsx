@@ -13,6 +13,8 @@ const categoryLabels: Record<string, string> = {
   'mon-chinh': 'Món chính',
   'do-uong': 'Đồ uống',
   'combo': 'Combo',
+  'an-vat': 'Ăn vặt',
+  'do-nuong': 'Đồ nướng',
 };
 
 const FoodDetailPage = () => {
@@ -71,9 +73,11 @@ const FoodDetailPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col"
           >
-            <Badge variant="secondary" className="w-fit mb-3">
-              {categoryLabels[item.category]}
-            </Badge>
+            {categoryLabels[item.category] && (
+              <Badge variant="secondary" className="w-fit mb-3">
+                {categoryLabels[item.category]}
+              </Badge>
+            )}
 
             <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
               {item.name}

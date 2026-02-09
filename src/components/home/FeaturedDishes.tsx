@@ -6,8 +6,20 @@ import { useMenu } from '@/context/MenuContext';
 import { Button } from '@/components/ui/button';
 
 const FeaturedDishes = () => {
-  const { getFeaturedItems } = useMenu();
+  const { getFeaturedItems, loading } = useMenu();
   const featured = getFeaturedItems();
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">Đang tải...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (featured.length === 0) return null;
 
   return (
     <section className="py-16 bg-background">

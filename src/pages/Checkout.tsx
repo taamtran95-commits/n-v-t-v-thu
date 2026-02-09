@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Phone, User, FileText, Hash } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/format';
 import { Button } from '@/components/ui/button';
@@ -10,15 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-
-interface OrderData {
-  id: string;
-  items: { name: string; quantity: number; price: number }[];
-  customer: { name: string; phone: string; tableNumber: string; notes: string };
-  total: number;
-  status: string;
-  createdAt: string;
-}
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -40,7 +32,7 @@ const CheckoutPage = () => {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!form.name || !form.phone) {
@@ -50,29 +42,46 @@ const CheckoutPage = () => {
 
     setIsSubmitting(true);
 
-    const orderId = 'AV' + Date.now().toString(36).toUpperCase();
+    const orderCode = 'AV' + Date.now().toString(36).toUpperCase();
 
-    const order: OrderData = {
-      id: orderId,
-      items: items.map(ci => ({
-        name: ci.item.name,
-        quantity: ci.quantity,
-        price: ci.item.price,
-      })),
-      customer: form,
-      total: totalPrice,
-      status: 'received',
-      createdAt: new Date().toISOString(),
-    };
+    // Insert order
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert({
+        order_code: orderCode,
+        customer_name: form.name,
+        customer_phone: form.phone,
+        table_number: form.tableNumber || null,
+        notes: form.notes || null,
+        total: totalPrice,
+        status: 'received',
+      })
+      .select('id')
+      .single();
 
-    const orders: OrderData[] = JSON.parse(localStorage.getItem('orders') || '[]');
-    orders.push(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
+    if (orderError || !order) {
+      toast.error('Lỗi khi gọi món. Vui lòng thử lại.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Insert order items
+    const orderItems = items.map(({ item, quantity }) => ({
+      order_id: order.id,
+      dish_name: item.name,
+      quantity,
+      price: item.price,
+    }));
+
+    await supabase.from('order_items').insert(orderItems);
+
+    // Save order code to localStorage for customer to view later
+    const savedCodes: string[] = JSON.parse(localStorage.getItem('my_order_codes') || '[]');
+    savedCodes.push(orderCode);
+    localStorage.setItem('my_order_codes', JSON.stringify(savedCodes));
 
     clearCart();
-
-    toast.success(`Gọi món thành công! 🎉 Mã đơn: ${orderId}`);
-
+    toast.success(`Gọi món thành công! 🎉 Mã đơn: ${orderCode}`);
     navigate('/lich-su');
   };
 
