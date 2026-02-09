@@ -73,7 +73,7 @@ const CheckoutPage = () => {
 
     toast.success(`Gọi món thành công! 🎉 Mã đơn: ${orderId}`);
 
-    navigate(`/theo-doi?order=${orderId}`);
+    navigate('/lich-su');
   };
 
   return (

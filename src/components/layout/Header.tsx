@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 const navLinks = [
   { name: 'Trang chủ', path: '/' },
   { name: 'Thực đơn', path: '/thuc-don' },
-  { name: 'Theo dõi món', path: '/theo-doi' },
+  { name: 'Lịch sử đơn', path: '/lich-su' },
 ];
 
 const Header = () => {
