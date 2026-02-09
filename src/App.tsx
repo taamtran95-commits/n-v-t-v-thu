@@ -12,7 +12,7 @@ import Index from "./pages/Index";
 import MenuPage from "./pages/Menu";
 import FoodDetailPage from "./pages/FoodDetail";
 import CheckoutPage from "./pages/Checkout";
-import OrderTrackingPage from "./pages/OrderTracking";
+import OrderHistoryPage from "./pages/OrderHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,7 +32,7 @@ const App = () => (
               <Route path="/thuc-don" element={<MenuPage />} />
               <Route path="/mon/:id" element={<FoodDetailPage />} />
               <Route path="/dat-hang" element={<CheckoutPage />} />
-              <Route path="/theo-doi" element={<OrderTrackingPage />} />
+              <Route path="/lich-su" element={<OrderHistoryPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
