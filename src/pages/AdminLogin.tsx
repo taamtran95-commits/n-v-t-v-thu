@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, Mail } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,25 +11,46 @@ import { useAuth } from '@/hooks/useAuth';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    if (isSignUp) {
+      const { error } = await signUp(email, password);
+      if (error) {
+        toast.error(error.message);
+        setLoading(false);
+        return;
+      }
 
-    if (error) {
-      toast.error('Sai email hoặc mật khẩu');
-      setLoading(false);
-      return;
+      // Auto-assign admin role after signup
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Check if any admin exists
+        const { count } = await supabase.from('user_roles').select('*', { count: 'exact', head: true }).eq('role', 'admin');
+        if (count === 0) {
+          await supabase.from('user_roles').insert({ user_id: user.id, role: 'admin' });
+        }
+      }
+
+      toast.success('Đăng ký thành công! Bạn là admin đầu tiên.');
+      navigate('/admin');
+    } else {
+      const { error } = await signIn(email, password);
+      if (error) {
+        toast.error('Sai email hoặc mật khẩu');
+        setLoading(false);
+        return;
+      }
+      toast.success('Đăng nhập thành công!');
+      navigate('/admin');
     }
-
-    toast.success('Đăng nhập thành công!');
-    navigate('/admin');
   };
 
   return (
@@ -40,7 +62,9 @@ const AdminLogin = () => {
       >
         <div className="text-center mb-6">
           <span className="text-4xl mb-2 block">🔐</span>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Đăng nhập quản lý</h1>
+          <h1 className="font-heading text-2xl font-bold text-foreground">
+            {isSignUp ? 'Tạo tài khoản Admin' : 'Đăng nhập quản lý'}
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">Dành cho chủ quán</p>
         </div>
 
@@ -72,13 +96,24 @@ const AdminLogin = () => {
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"
               required
+              minLength={6}
             />
           </div>
 
           <Button type="submit" variant="hero" size="lg" className="w-full" disabled={loading}>
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {loading ? 'Đang xử lý...' : isSignUp ? 'Đăng ký' : 'Đăng nhập'}
           </Button>
         </form>
+
+        <p className="text-center text-sm text-muted-foreground mt-4">
+          {isSignUp ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}{' '}
+          <button
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-primary font-medium hover:underline"
+          >
+            {isSignUp ? 'Đăng nhập' : 'Đăng ký'}
+          </button>
+        </p>
       </motion.div>
     </main>
   );
